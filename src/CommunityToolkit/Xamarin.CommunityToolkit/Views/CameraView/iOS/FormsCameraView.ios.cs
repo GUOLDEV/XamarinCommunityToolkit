@@ -6,6 +6,7 @@ using CoreGraphics;
 using CoreMedia;
 using Foundation;
 using UIKit;
+using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
 
 namespace Xamarin.CommunityToolkit.UI.Views
@@ -203,7 +204,7 @@ namespace Xamarin.CommunityToolkit.UI.Views
 					photoOutputConnection.VideoOrientation = previewLayer.Connection?.VideoOrientation ?? throw new NullReferenceException();
 
 				var photoSettings = AVCapturePhotoSettings.Create();
-				photoSettings.FlashMode = GetFlashMode();
+				photoSettings.FlashMode = FlashModeExtensions.Parse(flashMode);
 				photoSettings.IsHighResolutionPhotoEnabled = true;
 
 				var photoCaptureDelegate = new PhotoCaptureDelegate
@@ -236,21 +237,6 @@ namespace Xamarin.CommunityToolkit.UI.Views
 			finally
 			{
 				IsBusy = false;
-			}
-		}
-
-		AVCaptureFlashMode GetFlashMode()
-		{
-			switch (flashMode)
-			{
-				case CameraFlashMode.On:
-				case CameraFlashMode.Torch:
-					return AVCaptureFlashMode.On;
-				case CameraFlashMode.Auto:
-					return AVCaptureFlashMode.Auto;
-				case CameraFlashMode.Off:
-				default:
-					return AVCaptureFlashMode.Off;
 			}
 		}
 
@@ -347,31 +333,9 @@ namespace Xamarin.CommunityToolkit.UI.Views
 
 				if (CheckFlashModeSupported(desiredFlashMode))
 				{
-					switch (desiredFlashMode)
-					{
-						default:
-						case CameraFlashMode.Off:
-							device.FlashMode = AVCaptureFlashMode.Off;
-							break;
-						case CameraFlashMode.On:
-							device.FlashMode = AVCaptureFlashMode.On;
-							break;
-						case CameraFlashMode.Auto:
-							device.FlashMode = AVCaptureFlashMode.Auto;
-							break;
-						case CameraFlashMode.Torch:
-							device.TorchMode = AVCaptureTorchMode.On;
-							break;
-					}
-
+					device.FlashMode = FlashModeExtensions.Parse(desiredFlashMode);
+					device.TorchMode = TorchModeExtensions.Parse(desiredFlashMode);
 					flashMode = desiredFlashMode;
-				}
-
-				if (desiredFlashMode != CameraFlashMode.Torch
-					&& device.TorchMode == AVCaptureTorchMode.On
-					&& device.IsTorchModeSupported(AVCaptureTorchMode.Off))
-				{
-					device.TorchMode = AVCaptureTorchMode.Off;
 				}
 
 				device.UnlockForConfiguration();
