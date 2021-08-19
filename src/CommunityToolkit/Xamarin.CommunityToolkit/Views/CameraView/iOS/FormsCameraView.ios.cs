@@ -61,7 +61,7 @@ namespace Xamarin.CommunityToolkit.UI.Views
 			AddConstraints(NSLayoutConstraint.FromVisualFormat("H:|[mainView]|", NSLayoutFormatOptions.AlignAllTop, null, new NSDictionary("mainView", mainView)));
 		}
 
-		public void SetOrientation()
+		internal void SetOrientation()
 		{
 			SetFrameOrientation();
 			SetVideoOrientation();
