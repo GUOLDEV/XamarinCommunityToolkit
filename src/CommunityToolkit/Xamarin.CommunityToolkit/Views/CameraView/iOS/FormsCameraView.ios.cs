@@ -61,7 +61,13 @@ namespace Xamarin.CommunityToolkit.UI.Views
 			AddConstraints(NSLayoutConstraint.FromVisualFormat("H:|[mainView]|", NSLayoutFormatOptions.AlignAllTop, null, new NSDictionary("mainView", mainView)));
 		}
 
-		void SetStartOrientation()
+		public void SetOrientation()
+		{
+			SetFrameOrientation();
+			SetVideoOrientation();
+		}
+
+		void SetFrameOrientation()
 		{
 			var previewLayerFrame = previewLayer.Frame;
 
@@ -87,6 +93,36 @@ namespace Xamarin.CommunityToolkit.UI.Views
 			catch (Exception error)
 			{
 				LogError("Failed to adjust frame", error);
+			}
+		}
+
+		void SetVideoOrientation()
+		{
+			try
+			{
+				if (previewLayer?.Connection?.SupportsVideoOrientation == true)
+					previewLayer.Connection.VideoOrientation = GetVideoOrientation();
+			}
+			catch (Exception error)
+			{
+				LogError("Failed to set video orientation", error);
+			}
+		}
+
+		AVCaptureVideoOrientation GetVideoOrientation()
+		{
+			switch (UIApplication.SharedApplication.StatusBarOrientation)
+			{
+				case UIInterfaceOrientation.Portrait:
+					return AVCaptureVideoOrientation.Portrait;
+				case UIInterfaceOrientation.PortraitUpsideDown:
+					return AVCaptureVideoOrientation.PortraitUpsideDown;
+				case UIInterfaceOrientation.LandscapeLeft:
+					return AVCaptureVideoOrientation.LandscapeLeft;
+				case UIInterfaceOrientation.LandscapeRight:
+					return AVCaptureVideoOrientation.LandscapeRight;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(UIApplication.SharedApplication.StatusBarOrientation));
 			}
 		}
 
@@ -556,7 +592,7 @@ namespace Xamarin.CommunityToolkit.UI.Views
 				InvokeOnMainThread(() =>
 				{
 					captureConnection = previewLayer.Connection;
-					SetStartOrientation();
+					SetOrientation();
 					captureSession.StartRunning();
 				});
 			}
