@@ -534,7 +534,6 @@ namespace Xamarin.CommunityToolkit.UI.Views
 
 				InvokeOnMainThread(() =>
 				{
-					captureConnection = previewLayer.Connection;
 					SetOrientation();
 					captureSession.StartRunning();
 				});
