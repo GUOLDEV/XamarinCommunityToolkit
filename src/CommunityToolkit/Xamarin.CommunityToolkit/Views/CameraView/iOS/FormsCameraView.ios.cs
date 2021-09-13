@@ -67,25 +67,11 @@ namespace Xamarin.CommunityToolkit.UI.Views
 
 		void SetFrameOrientation()
 		{
-			var previewLayerFrame = previewLayer.Frame;
-
-			switch (UIApplication.SharedApplication.StatusBarOrientation)
-			{
-				case UIInterfaceOrientation.Portrait:
-				case UIInterfaceOrientation.PortraitUpsideDown:
-					previewLayerFrame.Height = UIScreen.MainScreen.Bounds.Height;
-					previewLayerFrame.Width = UIScreen.MainScreen.Bounds.Width;
-					break;
-
-				case UIInterfaceOrientation.LandscapeLeft:
-				case UIInterfaceOrientation.LandscapeRight:
-					previewLayerFrame.Width = UIScreen.MainScreen.Bounds.Width;
-					previewLayerFrame.Height = UIScreen.MainScreen.Bounds.Height;
-					break;
-			}
-
 			try
 			{
+				var previewLayerFrame = previewLayer.Frame;
+				previewLayerFrame.Height = mainView.Bounds.Height;
+				previewLayerFrame.Width = mainView.Bounds.Width;
 				previewLayer.Frame = previewLayerFrame;
 			}
 			catch (Exception error)

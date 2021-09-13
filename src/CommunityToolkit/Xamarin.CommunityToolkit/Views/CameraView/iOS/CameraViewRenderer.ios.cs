@@ -185,11 +185,10 @@ namespace Xamarin.CommunityToolkit.UI.Views
 					break;
 				case nameof(Element.Height):
 				case nameof(Element.Width):
-					Control.SetOrientation();
-					break;
 				case nameof(VisualElement.HeightProperty):
 				case nameof(VisualElement.WidthProperty):
 					Control.SetBounds(Element.Width, Element.Height);
+					Control.SetOrientation();
 					break;
 				case nameof(CameraView.VideoStabilization):
 					Control.VideoStabilization = Element.VideoStabilization;
